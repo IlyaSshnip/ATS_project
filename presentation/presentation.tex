@@ -74,4 +74,32 @@
     % Note that $\Sigma_0$ is just the variance of the initial prior price $p_0$.
 \end{frame}
 
+\subsection{Model Solution}
+
+\begin{frame}
+    The equilibrium defined above \textit{exists} and is \textit{unique}. Given $\Sigma_0$, the values of $\lambda_n$, $\beta_n$ and $\Sigma_n$ are a unique solution to the difference equation system, subject to $\alpha_N = 0$ and second order condition $\lambda_n (1 - \alpha_n\lambda_n) > 0$:
+
+    \begin{align}
+        \beta_n &= \dfrac{1 - 2\alpha_n\lambda_n}{2\lambda_n\Delta t_n (1 - \alpha_n\lambda_n)} \\
+        \lambda_n &= \dfrac{\beta_n\Sigma_n}{\sigma_u^2} \\
+        \alpha_{n-1} &= \dfrac{1}{4\lambda_{n}(1 - \alpha_{n}\lambda_{n})} \\
+        \Sigma_{n-1} &= \dfrac{\Sigma_{n}}{1 - \beta_{n}\lambda_{n}\Delta t_{n}}
+    \end{align}
+\end{frame}
+
+\begin{frame}
+The system is solved backwards: first we provide a ``guess'' for $\Sigma_N$, and then for each auction in the order $N, N - 1, \ldots, 1$, Kyle showed that $\lambda_n$ is the middle root of the cubic equation:
+
+\begin{equation}\label{eq:kyle_cubic}
+    \left(1 - \dfrac{\lambda_n^2\sigma_u^2\Delta t_n}{\Sigma_n}\right)(1 - \alpha_n\lambda_n) = \dfrac{1}{2}
+\end{equation}
+
+So, for each iteration $n$, we already have $\alpha_n$ and $\Sigma_n$ calculated. We solve (\ref{eq:kyle_cubic}) for $\lambda_n$, and then calculated $\beta_n$, $\alpha_{n-1}$ and $\Sigma_{n-1}$. 
+
+At the end, we compare our computed $\Sigma_0$ with the true value. If they are close, we solved the system, otherwise our guess for $\Sigma_N$ was incorrect. 
+
+To find a correct $\Sigma_N$, we use methods like bisection or Newton-Raphson method: we try to minimize the difference between true and computed $\Sigma_0$.
+
+\end{frame}
+
 \end{document}
