@@ -2,6 +2,7 @@
 
 \usetheme{Warsaw}
 \setbeamertemplate{caption}[numbered]
+\setbeamertemplate{theorems}[numbered]
 
 \begin{document}
 
@@ -13,33 +14,33 @@
         \item One informed trader (a monopolist)
         \item There are $N$ auctions happening at times $t_k$, $0 = t_0 < t_1 < \cdots < t_N = 1$.
         \item For implementation purposes, we assume equally spaced intervals: $\Delta t_k = t_k - t_{k-1} = \frac{1}{N}$.
-        \item The liquidation value of the asset $\tilde{v} \sim \mathcal{N}(p_0, \Sigma_0)$.
+        \item The liquidation value of the asset $v \sim \mathcal{N}(p_0, \Sigma_0)$.
     \end{itemize}
 \end{frame} 
 
 \begin{frame}
     \begin{itemize}
-        \item Quantity traded by noise traders is a \textit{Brownian motion process} $\tilde{u}_n = \tilde{u}(t_n)$.
-        \item $\Delta \tilde{u}_n = \tilde{u}_n - \tilde{u}_{n-1}$ is normally distributed with zero mean and variance $\sigma^2_t\Delta t_n$.
+        \item Quantity traded by noise traders is a \textit{Brownian motion process} $u_n = u(t_n)$.
+        \item $\Delta u_n = u_n - u_{n-1}$ is normally distributed with zero mean and variance $\sigma^2_t\Delta t_n$.
         \item Quantities traded at one auction are independent of the quantities traded at other auctions.
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \begin{itemize}
-        \item $\tilde{x}_n$ is the aggregate position of the insider after $n$-th auction, so that $\Delta \tilde{x}_n = \tilde{x}_n - \tilde{x}_{n-1}$ is the quantity traded at $n$-th auction.
-        \item $\tilde{p}_n$ is the market clearing price at the $n$-th auction.
-        \item When deciding what quantity to trade, the insider uses the liquidation value $\tilde{v}$ and past prices:
+        \item $x_n$ is the aggregate position of the insider after $n$-th auction, so that $\Delta x_n = x_n - x_{n-1}$ is the quantity traded at $n$-th auction.
+        \item $p_n$ is the market clearing price at the $n$-th auction.
+        \item When deciding what quantity to trade, the insider uses the liquidation value $v$ and past prices:
             \begin{equation}
-                \tilde{x}_n = X_n(\tilde{p}_1, \ldots, \tilde{p}_{n-1}, \tilde{v})
+                x_n = X_n(p_1, \ldots, p_{n-1}, v)
             \end{equation}
         \item Then, market makers set a market clearing price using current and all previous order flows:
             \begin{equation}
-                \tilde{p}_n = P_n(\tilde{x}_1 + \tilde{u_1}, \ldots, \tilde{x}_n + \tilde{u}_n)
+                p_n = P_n(x_1 + u_1, \ldots, x_n + u_n)
             \end{equation}
         \item Profit of the insider on the positions acquired at auctions $n, \ldots, N$:
             \begin{equation}
-                \tilde{\pi}_n = \sum_{k=n}^{N}(\tilde{v} - \tilde{p_k})\tilde{x}_k
+                \pi_n = \sum_{k=n}^{N}(v - p_k)x_k
             \end{equation}
     \end{itemize}
 \end{frame}
@@ -49,12 +50,12 @@
     \begin{itemize}
         \item \textit{profit maximization} is achieved, i.e.~we find such trading rules $X=(X_1, \ldots, X_N)$ that the expected profit is maximized:
             \begin{equation}
-                \mathbb{E}\{\tilde{\pi}_n(X, P) \mid \tilde{p}_1, \ldots, \tilde{p}_{n-1}, \tilde{v}\}
+                \mathbb{E}\{\pi_n(X, P) \mid p_1, \ldots, p_{n-1}, v\}
             \end{equation}
-        \item \textit{market efficiency} holds:
+        \item \textit{market efficiency} condition holds:
             \begin{equation}
-                \tilde{p}_n = \mathbb{E}\{\tilde{v} \mid \tilde{x}_1 + 
-                \tilde{u}_1, \ldots, \tilde{x}_n + \tilde{u}_n\}
+                p_n = \mathbb{E}\{v \mid x_1 + 
+                u_1, \ldots, x_n + u_n\}
             \end{equation}
     \end{itemize}
 \end{frame}
@@ -62,14 +63,14 @@
 \begin{frame}
     Kyle considers a \textit{recursive linear equilibrium}, where $X_k$ and $P_k$ are linear and:
     \begin{align}
-        \Delta \tilde{x}_n &= \beta_n(\tilde{v} - \tilde{p}_{n-1}) \Delta t_n \\
-        \Delta \tilde{p}_n &= \lambda_n(\Delta \tilde{x}_n + \Delta \tilde{u}_n)
+        \Delta x_n &= \beta_n(v - p_{n-1}) \Delta t_n \\
+        \Delta p_n &= \lambda_n(\Delta x_n + \Delta u_n)
     \end{align}
 
     In this equilibrium, price increments are normally and independently distributed. Thus, the distribution function for the pricing process is characterized by a sequence of variance parameters measuring the volatility of price fluctuations:
 
         \begin{equation}
-            \Sigma_n = Var \{\tilde{v} \mid \tilde{x}_1 + \tilde{u_1}, \ldots, \tilde{x}_n + \tilde{u}_n \}
+            \Sigma_n = Var \{v \mid x_1 + u_1, \ldots, x_n + u_n \}
         \end{equation}
 
     % Note that $\Sigma_0$ is just the variance of the initial prior price $p_0$.
@@ -95,7 +96,7 @@ The system is solved backwards: first we provide a ``guess'' for $\Sigma_N$, and
     \left(1 - \dfrac{\lambda_n^2\sigma_u^2\Delta t_n}{\Sigma_n}\right)(1 - \alpha_n\lambda_n) = \dfrac{1}{2}
 \end{equation}
 
-So, for each iteration $n$, we already have $\alpha_n$ and $\Sigma_n$ calculated. We solve (\ref{eq:kyle_cubic}) for $\lambda_n$, and then calculated $\beta_n$, $\alpha_{n-1}$ and $\Sigma_{n-1}$. 
+So, for each iteration $n$, we already have $\alpha_n$ and $\Sigma_n$ calculated. We solve (\ref{eq:kyle_cubic}) for $\lambda_n$, and then calculate $\beta_n$, $\alpha_{n-1}$ and $\Sigma_{n-1}$ from $\lambda_n$. 
 
 At the end, we compare our computed $\Sigma_0$ with the true value. If they are close, we solved the system, otherwise our guess for $\Sigma_N$ was incorrect. 
 
@@ -159,6 +160,131 @@ To find a correct $\Sigma_N$, we use methods like bisection or Newton-Raphson an
     \end{figure}
 
     $\Sigma_n$, informativeness of trades, does not depend on noise trading volatility.
+\end{frame}
+
+\section{$M$ Informed Traders}
+
+\subsection{Model Definition}
+
+\begin{frame}
+    \begin{itemize}
+        \item \textbf{Holden} and \textbf{Subrahmanyam} proposed an extension of multi-period Kyle model by introducing $M$ informed traders.
+        \item The model setup remains the same, except for $\Delta x_n$, which now means total order of \textit{all} informed traders at $n$-th auction.
+        \item A unique linear equilibrium also exists for such a model.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    The equilibrium is defined by equations:
+
+    \begin{align}
+        \Delta x_n &= M\beta_n(v - p_{n-1}) \Delta t_n \\
+        \Delta p_n &= \lambda_n(\Delta x_n + \Delta u_n) \\
+        \Sigma_n &= Var \{v \mid x_1 + u_1, \ldots, x_n + u_n \}
+    \end{align}
+\end{frame}
+
+\begin{frame}
+    Difference equation system, with boundary conditions $\alpha_N = 0$ and second order condition $\lambda_n (1 - \alpha_n\lambda_n) > 0$:
+
+    \begin{align}
+        \beta_n &= \dfrac{1 - 2\alpha_n\lambda_n}{\lambda_n\Delta t_n (M(1 - 2\alpha_n\lambda_n) + 1)} \\
+        \lambda_n &= \dfrac{M\beta_n\Sigma_n}{\sigma_u^2} \\
+        \alpha_{n-1} &= \dfrac{1 - \alpha_n\lambda_n}{\lambda_{n}(M(1 - 2\alpha_{n}\lambda_{n}) + 1)^2} \\
+        \Sigma_{n-1} &= \dfrac{\Sigma_{n}}{1 - M\beta_{n}\lambda_{n}\Delta t_{n}}
+    \end{align}
+
+    When $M=1$, we get the Kyle multi-period model.
+\end{frame}
+
+\subsection{Model Solution}
+
+\begin{frame}
+    \begin{itemize}
+        \item This model cannot be solved with ``guessing'' approach, but Holden and Subrahmanyam found a better way, which solves model for $M$, including $M=1$.
+        \item The method is explicit, and does not involve ``guessing'' $\Sigma_N$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    Define $q_n = \alpha_n\lambda_n$. Starting from $q_N = 0$, solve in a backward manner, for every $n$, the cubic equation:
+
+    \begin{equation}
+        2M\dfrac{\Delta t_{n-1}}{\Delta t_n} q_{n-1}^3 - (M+1)\dfrac{\Delta t_{n-1}}{\Delta t_n}q_{n-1}^2 - 2k_n q_{n-1} + k_n= 0
+    \end{equation}
+    where
+    \begin{equation}
+        k_n = \dfrac{(1-q_n)^2}{(1 - 2q_n)(M(1-2q_n) + 1)^2}
+    \end{equation}
+    and choose the unique root that lies in the interval $(0, \frac{1}{2})$.
+\end{frame}
+
+\begin{frame}
+    After that, starting from $\Sigma_0$, iterate forward and calculate parameters:
+
+    \begin{align}
+        \Sigma_n &= \dfrac{1}{M(1 - 2q_n) + 1}\Sigma_{n-1} \\
+        \lambda_n &= \left(\dfrac{M\Sigma_n(1-2q_n)}{\Delta_t \sigma_u^2 (M(1-2q_n) + 1)}\right)^{\frac{1}{2}} \\
+        \beta_n &= \left(\dfrac{(1-2q_n)\sigma_u^2}{\Sigma_n\Delta t_n (M(1-2q_n) + 1)}\right)^{\frac{1}{2}}
+    \end{align}
+
+\end{frame}
+
+\subsection{Model Analysis}
+
+\begin{frame}
+    \begin{figure}\label{fig:lambda_by_MN}
+        \includegraphics[width=\linewidth]{figures/lmbd_by_M_N.pdf}
+        \caption{$\lambda_N$ vs $N$ for different $M$.}
+    \end{figure}
+
+    As soon as we add competition, market depth increases a lot with each added informed trader.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:beta_by_MN}
+        \includegraphics[width=\linewidth]{figures/beta_by_M_N.pdf}
+        \caption{$\beta_N$ vs $N$ for different $M$.}
+    \end{figure}
+
+    Trading intensity explodes in comparison to $M=1$ case. Informed traders are much more aggressive.
+
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:sigma_by_MN}
+        \includegraphics[width=\linewidth]{figures/sigma_by_M_N.pdf}
+        \caption{$\Sigma_N$ vs $N$ for different $M$.}
+    \end{figure}
+
+    Private information is incorporated very fast.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:lambda_by_M}
+        \includegraphics[width=\linewidth]{figures/lmbd_by_M.pdf}
+        \caption{$\lambda_n$ vs $M$, $N=3$.}
+    \end{figure}
+
+    Market is very liquid at the final auction.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:beta_by_M}
+        \includegraphics[width=\linewidth]{figures/beta_by_M.pdf}
+        \caption{$\beta_n$ vs $M$, $N=3$.}
+    \end{figure}
+
+    Final auction trading intensity is rapidly increasing with increasing $M$.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:sigma_by_M}
+        \includegraphics[width=\linewidth]{figures/sigma_by_M.pdf}
+        \caption{$\Sigma_n$ vs $M$, $N=3$.}
+    \end{figure}
+
+    Already when we have 4 competitors, there is no hidden information left to trade on.
 \end{frame}
 
 \end{document}
