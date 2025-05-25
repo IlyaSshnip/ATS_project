@@ -1,0 +1,164 @@
+\documentclass{beamer}
+
+\usetheme{Warsaw}
+\setbeamertemplate{caption}[numbered]
+
+\begin{document}
+
+\section{Multi-Period Kyle Model}
+\subsection{Model Structure}
+
+\begin{frame}
+    \begin{itemize}
+        \item One informed trader (a monopolist)
+        \item There are $N$ auctions happening at times $t_k$, $0 = t_0 < t_1 < \cdots < t_N = 1$.
+        \item For implementation purposes, we assume equally spaced intervals: $\Delta t_k = t_k - t_{k-1} = \frac{1}{N}$.
+        \item The liquidation value of the asset $\tilde{v} \sim \mathcal{N}(p_0, \Sigma_0)$.
+    \end{itemize}
+\end{frame} 
+
+\begin{frame}
+    \begin{itemize}
+        \item Quantity traded by noise traders is a \textit{Brownian motion process} $\tilde{u}_n = \tilde{u}(t_n)$.
+        \item $\Delta \tilde{u}_n = \tilde{u}_n - \tilde{u}_{n-1}$ is normally distributed with zero mean and variance $\sigma^2_t\Delta t_n$.
+        \item Quantities traded at one auction are independent of the quantities traded at other auctions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item $\tilde{x}_n$ is the aggregate position of the insider after $n$-th auction, so that $\Delta \tilde{x}_n = \tilde{x}_n - \tilde{x}_{n-1}$ is the quantity traded at $n$-th auction.
+        \item $\tilde{p}_n$ is the market clearing price at the $n$-th auction.
+        \item When deciding what quantity to trade, the insider uses the liquidation value $\tilde{v}$ and past prices:
+            \begin{equation}
+                \tilde{x}_n = X_n(\tilde{p}_1, \ldots, \tilde{p}_{n-1}, \tilde{v})
+            \end{equation}
+        \item Then, market makers set a market clearing price using current and all previous order flows:
+            \begin{equation}
+                \tilde{p}_n = P_n(\tilde{x}_1 + \tilde{u_1}, \ldots, \tilde{x}_n + \tilde{u}_n)
+            \end{equation}
+        \item Profit of the insider on the positions acquired at auctions $n, \ldots, N$:
+            \begin{equation}
+                \tilde{\pi}_n = \sum_{k=n}^{N}(\tilde{v} - \tilde{p_k})\tilde{x}_k
+            \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    A \textit{sequential auction equilibrium} is defined such that:
+    \begin{itemize}
+        \item \textit{profit maximization} is achieved, i.e.~we find such trading rules $X=(X_1, \ldots, X_N)$ that the expected profit is maximized:
+            \begin{equation}
+                \mathbb{E}\{\tilde{\pi}_n(X, P) \mid \tilde{p}_1, \ldots, \tilde{p}_{n-1}, \tilde{v}\}
+            \end{equation}
+        \item \textit{market efficiency} holds:
+            \begin{equation}
+                \tilde{p}_n = \mathbb{E}\{\tilde{v} \mid \tilde{x}_1 + 
+                \tilde{u}_1, \ldots, \tilde{x}_n + \tilde{u}_n\}
+            \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    Kyle considers a \textit{recursive linear equilibrium}, where $X_k$ and $P_k$ are linear and:
+    \begin{align}
+        \Delta \tilde{x}_n &= \beta_n(\tilde{v} - \tilde{p}_{n-1}) \Delta t_n \\
+        \Delta \tilde{p}_n &= \lambda_n(\Delta \tilde{x}_n + \Delta \tilde{u}_n)
+    \end{align}
+
+    In this equilibrium, price increments are normally and independently distributed. Thus, the distribution function for the pricing process is characterized by a sequence of variance parameters measuring the volatility of price fluctuations:
+
+        \begin{equation}
+            \Sigma_n = Var \{\tilde{v} \mid \tilde{x}_1 + \tilde{u_1}, \ldots, \tilde{x}_n + \tilde{u}_n \}
+        \end{equation}
+
+    % Note that $\Sigma_0$ is just the variance of the initial prior price $p_0$.
+\end{frame}
+
+\subsection{Model Solution}
+
+\begin{frame}
+    The equilibrium defined above \textit{exists} and is \textit{unique}. Given $\Sigma_0$, the values of $\lambda_n$, $\beta_n$ and $\Sigma_n$ are a unique solution to the difference equation system, subject to $\alpha_N = 0$ and second order condition $\lambda_n (1 - \alpha_n\lambda_n) > 0$:
+
+    \begin{align}
+        \beta_n &= \dfrac{1 - 2\alpha_n\lambda_n}{2\lambda_n\Delta t_n (1 - \alpha_n\lambda_n)} \\
+        \lambda_n &= \dfrac{\beta_n\Sigma_n}{\sigma_u^2} \\
+        \alpha_{n-1} &= \dfrac{1}{4\lambda_{n}(1 - \alpha_{n}\lambda_{n})} \\
+        \Sigma_{n-1} &= \dfrac{\Sigma_{n}}{1 - \beta_{n}\lambda_{n}\Delta t_{n}}
+    \end{align}
+\end{frame}
+
+\begin{frame}
+The system is solved backwards: first we provide a ``guess'' for $\Sigma_N$, and then for each auction in the order $N, N - 1, \ldots, 1$, Kyle showed that $\lambda_n$ is the middle root of the cubic equation:
+
+\begin{equation}\label{eq:kyle_cubic}
+    \left(1 - \dfrac{\lambda_n^2\sigma_u^2\Delta t_n}{\Sigma_n}\right)(1 - \alpha_n\lambda_n) = \dfrac{1}{2}
+\end{equation}
+
+So, for each iteration $n$, we already have $\alpha_n$ and $\Sigma_n$ calculated. We solve (\ref{eq:kyle_cubic}) for $\lambda_n$, and then calculated $\beta_n$, $\alpha_{n-1}$ and $\Sigma_{n-1}$. 
+
+At the end, we compare our computed $\Sigma_0$ with the true value. If they are close, we solved the system, otherwise our guess for $\Sigma_N$ was incorrect. 
+
+To find a correct $\Sigma_N$, we use methods like bisection or Newton-Raphson and minimize the difference between true and computed $\Sigma_0$.
+
+\end{frame}
+
+\subsection{Model Analysis}
+
+\begin{frame}
+    \begin{figure}\label{fig:lambda_on_N}
+        \includegraphics[width=\linewidth]{figures/lambda_by_N.pdf}
+        \caption{$\lambda_n$ depending on number of auctions $N$.}
+    \end{figure}
+
+    Notice how terminal value $\lambda_N$ increases with $N$. When we have a monopolistic informed trader, market depth decreases with more auctions held.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:beta_on_N}
+        \includegraphics[width=\linewidth]{figures/beta_by_N.pdf}
+        \caption{$\beta_n$ depending on number of auctions $N$.}
+    \end{figure}
+
+    Insider trading intensity increases with $N$, but slowly.
+
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:sigma_on_N}
+        \includegraphics[width=\linewidth]{figures/sigma_by_N.pdf}
+        \caption{$\Sigma_n$ depending on number of auctions $N$.}
+
+    \end{figure}
+
+    Variance of prices, or the measure of how much information is not yet incorporated into prices, is decreasing slowly.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:lambda_on_uninf}
+        \includegraphics[width=\linewidth]{figures/lambda_by_uninf.pdf}
+        \caption{$\lambda_n$ vs $\sigma_u$.}
+    \end{figure}
+
+    Increasing the amount of noise trading increases market depth.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:beta_on_uninf}
+        \includegraphics[width=\linewidth]{figures/beta_by_uninf.pdf}
+        \caption{$\beta_n$ vs $\sigma_u$.}
+    \end{figure}
+
+    Insider trading intensity increases with noise trading increasing.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:sigma_on_uninf}
+        \includegraphics[width=\linewidth]{figures/sigma_by_uninf.pdf}
+        \caption{$\Sigma_n$ vs $\sigma_u$.}
+    \end{figure}
+
+    $\Sigma_n$, informativeness of trades, does not depend on noise trading volatility.
+\end{frame}
+
+\end{document}
