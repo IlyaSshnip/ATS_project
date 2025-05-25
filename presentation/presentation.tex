@@ -1,6 +1,7 @@
 \documentclass{beamer}
 
 \usetheme{Warsaw}
+\setbeamertemplate{caption}[numbered]
 
 \begin{document}
 
@@ -9,7 +10,7 @@
 
 \begin{frame}
     \begin{itemize}
-        \item As before, we have one informed trader
+        \item One informed trader (a monopolist)
         \item There are $N$ auctions happening at times $t_k$, $0 = t_0 < t_1 < \cdots < t_N = 1$.
         \item For implementation purposes, we assume equally spaced intervals: $\Delta t_k = t_k - t_{k-1} = \frac{1}{N}$.
         \item The liquidation value of the asset $\tilde{v} \sim \mathcal{N}(p_0, \Sigma_0)$.
@@ -98,8 +99,66 @@ So, for each iteration $n$, we already have $\alpha_n$ and $\Sigma_n$ calculated
 
 At the end, we compare our computed $\Sigma_0$ with the true value. If they are close, we solved the system, otherwise our guess for $\Sigma_N$ was incorrect. 
 
-To find a correct $\Sigma_N$, we use methods like bisection or Newton-Raphson method: we try to minimize the difference between true and computed $\Sigma_0$.
+To find a correct $\Sigma_N$, we use methods like bisection or Newton-Raphson and minimize the difference between true and computed $\Sigma_0$.
 
+\end{frame}
+
+\subsection{Model Analysis}
+
+\begin{frame}
+    \begin{figure}\label{fig:lambda_on_N}
+        \includegraphics[width=\linewidth]{figures/lambda_by_N.pdf}
+        \caption{$\lambda_n$ depending on number of auctions $N$.}
+    \end{figure}
+
+    Notice how terminal value $\lambda_N$ increases with $N$. When we have a monopolistic informed trader, market depth decreases with more auctions held.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:beta_on_N}
+        \includegraphics[width=\linewidth]{figures/beta_by_N.pdf}
+        \caption{$\beta_n$ depending on number of auctions $N$.}
+    \end{figure}
+
+    Insider trading intensity increases with $N$, but slowly.
+
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:sigma_on_N}
+        \includegraphics[width=\linewidth]{figures/sigma_by_N.pdf}
+        \caption{$\Sigma_n$ depending on number of auctions $N$.}
+
+    \end{figure}
+
+    Variance of prices, or the measure of how much information is not yet incorporated into prices, is decreasing slowly.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:lambda_on_uninf}
+        \includegraphics[width=\linewidth]{figures/lambda_by_uninf.pdf}
+        \caption{$\lambda_n$ vs $\sigma_u$.}
+    \end{figure}
+
+    Increasing the amount of noise trading increases market depth.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:beta_on_uninf}
+        \includegraphics[width=\linewidth]{figures/beta_by_uninf.pdf}
+        \caption{$\beta_n$ vs $\sigma_u$.}
+    \end{figure}
+
+    Insider trading intensity increases with noise trading increasing.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}\label{fig:sigma_on_uninf}
+        \includegraphics[width=\linewidth]{figures/sigma_by_uninf.pdf}
+        \caption{$\Sigma_n$ vs $\sigma_u$.}
+    \end{figure}
+
+    $\Sigma_n$, informativeness of trades, does not depend on noise trading volatility.
 \end{frame}
 
 \end{document}
