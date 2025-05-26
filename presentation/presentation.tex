@@ -4,6 +4,15 @@
 \setbeamertemplate{caption}[numbered]
 \setcounter{figure}{4}
 \setbeamertemplate{theorems}[numbered]
+\usepackage{tikz}
+
+\AtBeginSection[]{
+  \begin{frame}
+    \tableofcontents[currentsection, hideothersubsections]
+  \end{frame}
+}
+
+
 \title[Single- and Multi-Period Kyle Models]{Price Discovery and Information Revelation}
 \subtitle{Single- and Multi-Period Kyle Models}
 \author{Andrei Shelest, Filipe Correia, Ilya Shnip, Zofia Bracha}
@@ -293,7 +302,7 @@ Substituting \( \beta = \frac{1}{\lambda(M+1)} \), we get the closed-form equili
     \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}\small
     \begin{itemize}
         \item $x_n$ is the aggregate position of the insider after $n$-th auction, so that $\Delta x_n = x_n - x_{n-1}$ is the quantity traded at $n$-th auction.
         \item $p_n$ is the market clearing price at the $n$-th auction.
@@ -559,28 +568,31 @@ To find a correct $\Sigma_N$, we use methods like bisection or Newton-Raphson an
 \begin{frame}
 
 \begin{itemize}\small
-    \item \textbf{Private information enters prices gradually} as informed traders exploit their advantage while avoiding detection. Prices adjust as market makers interpret total order flow.
+    \item \textbf{Private information is incorporated into prices gradually}, as informed traders trade strategically to profit without fully revealing their information. Market makers update prices based on observed order flow (noise + informed).
 
-    \item \textbf{In the single-period Kyle model}, only partial information is revealed. The market maker observes one noisy signal and adjusts price partially toward the true value.
+    \item \textbf{In the single-period Kyle model}, the market maker observes a single round of aggregate (informed + noise) order flow and sets the price as a linear function of it. The price moves partially toward the asset’s true value, with the adjustment determined by the relative variance of noise and informed trading.
 
-    \item \textbf{In the multi-period model}, the insider spreads trades over time. Prices are updated sequentially based on cumulative order flow, improving accuracy with each period.
+    \item \textbf{In the multi-period model}, the insider spreads trades over time. Prices are updated sequentially based on cumulative order flow, gradually incorporating private information and reducing the conditional variance of the asset’s value.
 
     \item \textbf{Price updates follow Bayesian learning}, with the conditional variance \( \Sigma_n \) decreasing as more order flow is observed.
 
-    \item \textbf{Trading strategy depends on liquidity}, inversely related to the price impact \( \lambda \). Lower \( \lambda \) (more liquidity) leads to more aggressive trades; higher \( \lambda \) leads to caution.
 \end{itemize}
 \end{frame}
 
 \subsection{Part II}
 \begin{frame}
 \begin{itemize}\small
-    \item \textbf{Liquidity and strategy are jointly determined.} The market maker sets the price impact \(\lambda\) based on how informative trades are expected to be. Informed traders, in turn, adjust their aggressiveness depending on \(\lambda\). This mutual dependence defines the equilibrium.
 
-    \item \textbf{In the multi-period model,} \(\lambda_n\) typically increases over time. Early trades are easier to disguise within noise; later trades are more informative and move prices more sharply.
+    \item \textbf{Trading strategy depends on liquidity}, inversely related to the price impact \( \lambda \). Lower \( \lambda \) (more liquidity) leads to more aggressive trades; higher \( \lambda \) leads to caution.
+    
+    \item \textbf{Liquidity and strategy are endogenously determined.} The market maker chooses  \(\lambda\) based on expected informed trading, and traders adjust their strategy accordingly. Equilibrium arises from this mutual dependence.
 
-    \item \textbf{Multiple informed traders accelerate price discovery.} In the Holden & Subrahmanyam (1992) extension, strategic competition pushes traders to reveal information more quickly, especially early in the trading sequence.
+    \item \textbf{In the multi-period model,} \(\lambda_n\) decreases over time. For monopolistic informed trader, final $\lambda_N$ increases with $N$, but even with one additional competitor, $\lambda_N$ decreases, if we add more auctions to the model.
+
+    \item \textbf{Multiple informed traders accelerate price discovery.} In the Holden & Subrahmanyam (1992) extension, strategic competition among multiple informed traders leads to faster information revelation, particularly in the early stages of the trading sequence.
 \end{itemize}
 \end{frame}
+
 
 \begin{frame}
 \centering
