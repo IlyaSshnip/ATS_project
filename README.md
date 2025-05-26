@@ -1,4 +1,4 @@
-# Price Discovery and Information Revelation
+## Price Discovery and Information Revelation
 
 This repository contains a presentation on **Single- and Multi-Period Kyle Models**, exploring how private information becomes incorporated into asset prices through strategic trading and market response.
 
@@ -13,7 +13,6 @@ The presentation builds on the classic single-period Kyle (1985) model and exten
 
 ## **Project Structure**
 ```plaintext
-.
 ├── .gitignore                     
 ├── kyle_model.ipynb               # Project Implementation
 ├── requirements.txt               # Python dependencies
