@@ -2,9 +2,276 @@
 
 \usetheme{Warsaw}
 \setbeamertemplate{caption}[numbered]
+\setcounter{figure}{4}
 \setbeamertemplate{theorems}[numbered]
+\title[Single- and Multi-Period Kyle Models]{Price Discovery and Information Revelation}
+\subtitle{Single- and Multi-Period Kyle Models}
+\author{Andrei Shelest, Filipe Correia, Ilya Shnip, Zofia Bracha}
+\date{May 27, 2025}
 
 \begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Objectives}
+\begin{frame}
+To study how private information becomes incorporated into asset prices through the process of price discovery.
+This is done by analyzing the one-period Kyle (1985) model and extending it to a simplified multi-period setting with \( N > 1 \) periods.
+
+\vspace{1em}
+\textbf{Some key questions:}
+\begin{itemize}
+    \item How is private information incorporated into prices over time?
+    \item How does the informed trader’s strategy interact with market liquidity?
+    \item How does the price impact parameter \( \lambda \) evolve across periods in a multi-period Kyle model?
+    \item How does information incorporation in the multi-period case differ from the static, single-period model?
+\end{itemize}
+\end{frame}
+
+
+\section{Single-Period Kyle Model}
+\subsection{Overview}
+\begin{frame}
+In this canonical version of Kyle’s model, all trading occurs in a single round. The market structure is defined by asymmetric information and strategic interaction between three types of agents:
+
+\vspace{1em}
+
+\begin{itemize}
+    \item \textbf{Informed trader:} knows the true future value of the asset.
+    \item \textbf{Noise traders:} trade randomly due to liquidity needs.
+    \item \textbf{Market maker:} sets the price based on the total observed order flow and updates their beliefs accordingly.
+\end{itemize}
+\end{frame}
+
+\subsection{Assumptions}
+\begin{frame}
+
+\begin{itemize}
+    \item At the start of the period, agents trade an asset with an uncertain end-of-period value \( \tilde{v} \sim \mathcal{N}(p_0, \Sigma_0) \).
+
+    \item Noise traders trade for exogenous reasons unrelated to information. They submit a random market order \( \tilde{u} \sim \mathcal{N}(0, \sigma_u^2) \), independent of \( \tilde{v} \).
+
+    \item The informed trader is risk-neutral and chooses trade size \( x \) to maximize expected profit. The trader knows \( \tilde{v} \), but not \( \tilde{u} \).
+
+    \item The market maker is risk-neutral and observes total order flow \( y = x + u \), but cannot distinguish informed trades from noise (all orders are anonymous).
+
+\end{itemize}
+\end{frame}
+
+\subsection{Model Structure}
+\begin{frame}
+
+Under normality assumptions, the Kyle (1985) model admits a linear equilibrium, where both the informed trader’s demand and the market maker’s pricing rule are linear functions:
+
+\begin{itemize}
+    \item \textbf{Informed Trader’s Strategy:}  
+    The trader chooses demand based on the deviation of the asset’s value from the prior mean:  
+    \( x = \beta(\tilde{v} - p_0) \).  
+    The parameter \( \beta \) reflects the insider’s trading aggressiveness.
+
+    \item \textbf{Market Maker’s Pricing Rule:}  
+    Observing total order flow \( y = x + u \) , the market maker sets:  \( p = p_0 + \lambda y \), where \( \lambda \) captures the price sensitivity to order flow (i.e., the price impact).
+    
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\tiny\begin{block}{Solving the Informed Trader and Market Maker Conditions}
+\tiny
+\begin{itemize}
+    \item \textbf{Insider's strategy:}
+    \(
+    \max_x \, \mathbb{E}[(v - (p_0 + \lambda(x + u)))x \mid v] = (v - p_0 - \lambda x)x
+    \). 
+    \\FOC gives 
+    \( x = \frac{v - p_0}{2\lambda} \), implying \( \beta = \frac{1}{2\lambda} \).
+
+    \item \textbf{Market maker sets:} 
+    \( p = \mathbb{E}[v \mid y] = p_0 + \frac{\text{Cov}(v, y)}{\text{Var}(y)}(y - \mathbb{E}[y]) \). \\
+    Since 
+    \( y = \beta(v - p_0) + u \), we get: 
+    \( \mathbb{E}[y] = 0 \), 
+    \( \text{Cov}(v, y) = \beta \Sigma_0 \), 
+    \( \text{Var}(y) = \beta^2 \Sigma_0 + \sigma_u^2 \). Thus,
+    \[
+    \lambda = \frac{\beta \Sigma_0}{\beta^2 \Sigma_0 + \sigma_u^2}
+    \]
+
+    \item Substituting \( \beta = \frac{1}{2\lambda} \) gives the equilibrium values:
+\[
+\boxed{
+  \lambda = \frac{1}{2} \sqrt{\frac{\Sigma_0}{\sigma_u^2}}, \quad
+  \beta = \sqrt{\frac{\sigma_u^2}{\Sigma_0}}
+}
+\]
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\subsection{Equilibrium Conditions}
+\begin{frame}
+
+{\tiny
+\begin{block}{Summary of Equilibrium Conditions}
+\tiny
+\begin{itemize}
+    \item The impact is linear and liquidity increases with the amount of noise traders:
+    \[
+    p = p_0 + \frac{1}{2} \sqrt{\frac{\Sigma_0}{\sigma_u^2}} \, y
+    \]
+
+    \item The informed trader increases trade size when their orders can be more easily hidden within noise:
+    \[
+    x = (v - p_0) \sqrt{\frac{\sigma_u^2}{\Sigma_0}}
+    \]
+
+    \item The expected profit of the informed agent grows with noise trading:
+    \[
+    \mathbb{E}[\pi] = \frac{(v - p_0)^2}{2} \sqrt{\frac{\sigma_u^2}{\Sigma_0}}
+    \]
+
+    \item Noise traders lose money; market makers break even on average.
+\end{itemize}
+\end{block}
+}
+
+\end{frame}
+
+\subsection{Model Simulation}
+\begin{frame}
+We simulated the model to visualize how the theoretical equilibrium plays out in practice. This included examining how the price impact parameter \( \lambda \) changes with true asset value uncertainty \( \Sigma_0 \) and noise trader order uncertainty \( \sigma_u^2 \).
+
+We also tested different non-linear price adjustment functions to observe how these affect the evolution of market maker quotes.
+
+\vspace{1em}
+\textbf{Baseline parameters:}
+\begin{itemize}
+    \item Prior mean of asset value: \( p_0 = 100.0 \)
+    \item Standard deviation of true asset value: \( \sigma_v = 2.5 \)
+    \item Standard deviation of noise trader orders: \( \sigma_u = 5.0 \)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\centering
+\includegraphics[width=0.65\linewidth]{figures/lmbd_fig.png}
+
+\vspace{0.5em}
+{\small {\textcolor[RGB]{41,49,202}{Figure 1:}} \(\lambda\) increases with asset uncertainty (insider’s information is more valuable), and decreases with noise (order flow is less informative).}
+\end{frame}
+
+\begin{frame}
+\centering
+\includegraphics[width=0.8\linewidth]{figures/kyle_fig.png}
+
+\vspace{0.5em}
+\includegraphics[width=0.8\linewidth]{figures/log_fig.png}
+
+\vspace{0.5em}
+\includegraphics[width=0.8\linewidth]{figures/exp_fig.png}
+
+\vspace{0.5em}
+{\tiny {\textcolor[RGB]{41,49,202}{Figure 2:}} Concave adjustments (e.g., log, sqrt) reduce the effect of large trades, leading to more stable price paths than the linear Kyle. Convex adjustments (e.g., squared, exp) react more strongly to large trades, accelerating convergence but increasing volatility.}
+\end{frame}
+
+\section{$M$ informed Traders}
+\subsection{Model Definition}
+\begin{frame}
+\begin{itemize}
+    \item Holden and Subrahmanyam (1992) extend Kyle’s single-period model by allowing for \( M > 1 \) informed traders who compete strategically in the market.
+
+    \item Although the overall structure remains largely intact, the presence of multiple insiders changes how private information is incorporated into prices.
+
+    \item A competitive, risk-neutral market maker observes only total order flow \( y = \sum x_i + u \) and sets the price \( p = \mathbb{E}[v \mid y] \).
+
+    \item Traders follow linear strategies \( x_i = \beta(v - p) \), and the market maker uses a pricing rule \( p = \mu + \lambda y \). A unique linear equilibrium exists.
+\end{itemize}
+\end{frame}
+
+\subsection{Model Structure and Solution}
+\begin{frame}
+\begin{block}{\tiny \textbf{Insider’s strategy (for each of \( M \) insiders):}}
+\tiny
+Each informed trader maximizes their expected profit, assuming the others follow the same linear strategy. The maximization function becomes:
+\[
+\max_{x_i} \, \mathbb{E}[(v - p)x_i \mid v] = (v - \mu - \lambda(x_i + \sum_{j \neq i} x_j + u))x_i
+\]
+Assuming symmetric strategies \( x_j = \beta(v - \mu) \), this simplifies to:
+\[
+\max_{x_i} (v - \mu - \lambda(x_i + (M - 1)\beta(v - \mu)))x_i
+\]
+Solving the FOC gives:
+\[
+x_i = \frac{1 - \lambda \beta(M - 1)}{2\lambda}(v - \mu)
+\]
+From symmetry, \( x_i = \beta(v - \mu) \), so:
+\[
+\beta = \frac{1}{\lambda(M + 1)}
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{\tiny \textbf{Market maker sets price:}}
+\tiny
+The market maker observes total order flow \( y = \sum_{i=1}^{M} x_i + u = M \beta (v - p_0) + u \), and sets the price using conditional expectation:
+\[
+p = \mathbb{E}[v \mid y] = p_0 + \frac{\text{Cov}(v, y)}{\text{Var}(y)} (y - \mathbb{E}[y])
+\]
+Since \( y = M \beta (v - p_0) + u \), we compute:
+\[
+\mathbb{E}[y] = 0, \quad \text{Cov}(v, y) = M \beta \Sigma_0, \quad \text{Var}(y) = M^2 \beta^2 \Sigma_0 + \sigma_u^2
+\]
+Thus,
+\[
+\lambda = \frac{M \beta \Sigma_0}{M^2 \beta^2 \Sigma_0 + \sigma_u^2}
+\]
+Substituting \( \beta = \frac{1}{\lambda(M+1)} \), we get the closed-form equilibrium:
+\[
+\Rightarrow \boxed{
+\lambda = \frac{\sqrt{M \Sigma_0}}{\sigma_u \sqrt{M+1}}, \quad 
+\beta = \frac{1}{\lambda(M+1)}
+}
+\]
+\end{block}
+\end{frame}
+
+\subsection{Model Simulation}
+\begin{frame}
+\begin{itemize}
+    \item In this section, we explore how the model behaves as more informed traders are introduced.
+    \item We focus on how:
+    \begin{itemize}
+        \item $\lambda$ and $\beta$ respond as $M$ increases.
+        \item The market maker adjusts prices toward the true asset value.
+    \end{itemize}
+    \item The goal is to see if adding more informed traders speeds up price discovery.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\centering
+\includegraphics[width=0.8\linewidth]{figures/Ms1}
+
+\vspace{0.5em}
+\includegraphics[width=0.8\linewidth]{figures/Ms2}
+
+\vspace{0.5em}
+{\tiny {\textcolor[RGB]{41,49,202}{Figure 3:}} Both models drive prices toward the true asset value, but the HS model adjusts faster initially. With multiple informed traders, prices show slightly higher volatility due to more aggressive competition. Quotes also begin closer to fair value, reflecting greater pricing efficiency. Overall, more informed traders make the market react faster to information. Additionally, as more informed traders are introduced, their incremental impact on price discovery diminishes.}
+\end{frame}
+
+\begin{frame}
+\centering
+\includegraphics[width=0.8\linewidth]{figures/ParamsvsMs}
+
+\vspace{0.5em}
+{\tiny {\textcolor[RGB]{41,49,202}{Figure 4:}} As the number of informed traders ($M$) increases, $\lambda$ rises but more slowly — prices become less sensitive to each additional trader. $\beta$ drops quickly, showing that each trader becomes less aggressive.}
+\end{frame}
 
 \section{Multi-Period Kyle Model}
 \subsection{Model Structure}
@@ -73,7 +340,6 @@
             \Sigma_n = Var \{v \mid x_1 + u_1, \ldots, x_n + u_n \}
         \end{equation}
 
-    % Note that $\Sigma_0$ is just the variance of the initial prior price $p_0$.
 \end{frame}
 
 \subsection{Model Solution}
@@ -285,6 +551,40 @@ To find a correct $\Sigma_N$, we use methods like bisection or Newton-Raphson an
     \end{figure}
 
     Already when we have 4 competitors, there is no hidden information left to trade on.
+\end{frame}
+
+\section{Conclusions}
+\subsection{Part I}
+
+\begin{frame}
+
+\begin{itemize}\small
+    \item \textbf{Private information enters prices gradually} as informed traders exploit their advantage while avoiding detection. Prices adjust as market makers interpret total order flow.
+
+    \item \textbf{In the single-period Kyle model}, only partial information is revealed. The market maker observes one noisy signal and adjusts price partially toward the true value.
+
+    \item \textbf{In the multi-period model}, the insider spreads trades over time. Prices are updated sequentially based on cumulative order flow, improving accuracy with each period.
+
+    \item \textbf{Price updates follow Bayesian learning}, with the conditional variance \( \Sigma_n \) decreasing as more order flow is observed.
+
+    \item \textbf{Trading strategy depends on liquidity}, inversely related to the price impact \( \lambda \). Lower \( \lambda \) (more liquidity) leads to more aggressive trades; higher \( \lambda \) leads to caution.
+\end{itemize}
+\end{frame}
+
+\subsection{Part II}
+\begin{frame}
+\begin{itemize}\small
+    \item \textbf{Liquidity and strategy are jointly determined.} The market maker sets the price impact \(\lambda\) based on how informative trades are expected to be. Informed traders, in turn, adjust their aggressiveness depending on \(\lambda\). This mutual dependence defines the equilibrium.
+
+    \item \textbf{In the multi-period model,} \(\lambda_n\) typically increases over time. Early trades are easier to disguise within noise; later trades are more informative and move prices more sharply.
+
+    \item \textbf{Multiple informed traders accelerate price discovery.} In the Holden & Subrahmanyam (1992) extension, strategic competition pushes traders to reveal information more quickly, especially early in the trading sequence.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\centering
+{\Huge \textbf{Q\&A}}
 \end{frame}
 
 \end{document}
