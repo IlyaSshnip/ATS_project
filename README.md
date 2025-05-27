@@ -17,6 +17,8 @@ The presentation builds on the classic single-period Kyle (1985) model and exten
 ├── kyle_model.ipynb               # Project Implementation
 ├── requirements.txt               # Python dependencies
 ├── .python-version                # Python version
+├── report
+│ └── repot.pdf                    # Compiled report
 ├── presentation
 │   ├── presentation.tex           # LaTeX source of the Beamer presentation
 │   └── presentation.pdf           # Compiled slides
