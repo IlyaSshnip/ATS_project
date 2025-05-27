@@ -44,3 +44,6 @@ Presented: May 27, 2025
 
 - **Back, K. (1992).** *Insider Trading in Continuous Time*. *Review of Financial Studies*, 5(3), 387–409.  
   Offers a continuous-time limit of Kyle’s model.
+
+- **Admati, A. R., & Pfleiderer, P. (1988).** A Theory of Intraday Patterns: Volume and Price Variability. Review of Financial Studies, 1(1), 3–40.
+Provides a contrasting model where traders endogenously choose when to trade. 
